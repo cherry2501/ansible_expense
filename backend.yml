@@ -1,6 +1,9 @@
 - name: backend configuration
   hosts: backend.charanworld.online
   become: yes
+  vars:
+    login_host: mysql.charanworld.online
+    mysql_root_password: ExpenseApp@1
   tasks:
   - name: disable default nodejs
     ansible.builtin.command: dnf module disable nodejs -y
@@ -52,3 +55,18 @@
         - PyMySQL
         - cryptography
       executable: pip3.9
+
+  - name: import mysql data
+    community.mysql.mysql_db:
+      login: root
+      login_password: "{{ mysql_root_password }}"
+      login_host: "{{ login_host }}"
+      target: /app/schema/backend.sql
+      name: all
+      state: import
+  
+  - name: deamon reload
+    ansible.builtin.systemd_service:
+      daemon_reload: true
+      state: restarted
+      name: backend
