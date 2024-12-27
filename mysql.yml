@@ -3,7 +3,7 @@
   become: yes
   vars:
     login_host: mysql.charanworld.online
-    mysql_root_password: ExpenseApp@1
+    mysql_root_password: "ExpenseApp@1"
   tasks:
   - name: intasll pymsql
     ansible.builtin.pip:
@@ -26,7 +26,7 @@
     community.mysql.mysql_info:
       login_user: root
       login_password: "{{ mysql_root_password }}"
-      login_host: " {{ login_host }}"
+      login_host: "{{ login_host }}"
     ignore_errors: true
     register: mysql_info
   
